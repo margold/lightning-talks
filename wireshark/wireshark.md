@@ -32,6 +32,28 @@ We can see the request! And the response!
 
 ---
 
+```python
+from http.server import HTTPServer, BaseHTTPRequestHandler
+#import ssl
+
+# This handler says MEOW to all GET requests
+class MeowHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write("MEOW!".encode("utf-8"))
+
+server_address = ('localhost', 4443)
+httpd = HTTPServer(server_address, MeowHandler)
+#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
+try:
+    httpd.serve_forever()
+except KeyboardInterrupt:
+    httpd.server_close()
+```
+
+---
+
 ```bash
 openssl req -new -x509 -out selfsigned.crt -nodes -keyout selfsigned.key -subj /O=Recurse/CN=localhost
 man req
@@ -50,26 +72,20 @@ man x509
 
 ---
 
+tcpdump on **localhost** (`-i lo0`) **port 4443**, **show full packets** (`-s 0`)
 
-wireshark --version
-check GnuTLS (SSL decryption support)
+```bash
+sudo tcpdump -i lo0 -s 0 tcp port 4443 -w localhost-https.pcap
+```
 
-sudo tcpdump -i any -s 0 port 4433 -w localhost.pcap
-sudo tcpdump -n port 1060 -i lo –X
-https://localhost:4433/
-^C
+https://localhost:4433?query=something
 
-4433 -> HTTP settings
+We can't see the request or response ( :( or :) depending on what you want)
 
-Open the capture file in wireshark and confirm you see something similar to the walkthrough. If all you see are TCP entries (no HTTP or SSL), and your traffic is on a non-standard port, add that port to HTTP and SSL settings.
+---
+
+`wireshark --version` (look for GnuTLS - SSL decryption support)
+4443 -> HTTP/SSL settings
+
+
 Look at the handshake pattern: rsa-only, or DH.
-
-
-
-
-this should be the public key + issuer statement signed by issuer's private key
-is this self-signed? how do I tell the two parts apart?
-
-
-more on certs:
-http://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art030
