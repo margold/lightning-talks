@@ -11,6 +11,7 @@ class MeowHandler(BaseHTTPRequestHandler):
 
 server_address = ('localhost', 4443)
 httpd = HTTPServer(server_address, MeowHandler)
+#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True, ciphers='RSA')
 #httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
 try:
     httpd.serve_forever()
@@ -20,9 +21,10 @@ except KeyboardInterrupt:
 
 ---
 
-sudo tcpdump *-i lo0* -s 0 tcp port *4443* -w localhost-http.pcap
-
-https://localhost:*4443*?query=something
+- `https://localhost:4443?query=something`
+- `sudo tcpdump -i lo0 -s 0 tcp port 4443 \
+ -w localhost.pcap`
+- we can see the request and response!
 
 ---
 
@@ -41,7 +43,8 @@ class MeowHandler(BaseHTTPRequestHandler):
 
 server_address = ('localhost', 4443)
 httpd = HTTPServer(server_address, MeowHandler)
-httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
+httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True, ciphers='RSA')
+#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:
@@ -51,7 +54,7 @@ except KeyboardInterrupt:
 ---
 
 ```bash
-# make a public key signed by itself ("a self-signed certificate")
+# make a public key signed by itself ("self-signed certificate")
 openssl req -new -x509 -out selfsigned.crt -nodes -keyout selfsigned.key -subj /O=Recurse/CN=localhost
 
 # base64-encoding of a ASN.1-formatted file (similar in concept to JSON)
@@ -67,20 +70,7 @@ man x509
 
 ---
 
-tcpdump on **localhost** (`-i lo0`) **port 4443**, **show full packets** (`-s 0`)
-
-```bash
-sudo tcpdump -i lo0 -s 0 tcp port 4443 -w localhost-https.pcap
-```
-
-https://localhost:4443?query=something
-
-We can't see the request or response ( :( or :) depending on what you want)
-
----
-
-`wireshark --version` (look for GnuTLS - SSL decryption support)
-4443 -> HTTP/SSL settings
-
-
-Look at the handshake pattern: rsa-only, or DH.
+- `https://localhost:4443?query=something`
+- `sudo tcpdump -i lo0 -s 0 tcp port 4443 \
+ -w localhost.pcap`
+- we can't see the request or response! (:smile: or :cry: depending on what you want)
