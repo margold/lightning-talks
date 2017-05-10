@@ -10,7 +10,7 @@ class MeowHandler(BaseHTTPRequestHandler):
 
 server_address = ('localhost', 4443)
 httpd = HTTPServer(server_address, MeowHandler)
-#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='server.pem', certfile='server.crt', server_side=True)
+#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:
