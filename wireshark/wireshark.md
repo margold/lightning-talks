@@ -19,8 +19,7 @@ class MeowHandler(BaseHTTPRequestHandler):
 
 server_address = ('localhost', 4443)
 httpd = HTTPServer(server_address, MeowHandler)
-#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True, ciphers='RSA')
-#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
+#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='keys/selfsigned.key', certfile='keys/selfsigned.crt', server_side=True)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:
@@ -73,8 +72,7 @@ class MeowHandler(BaseHTTPRequestHandler):
 
 server_address = ('localhost', 4443)
 httpd = HTTPServer(server_address, MeowHandler)
-httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True, ciphers='RSA')
-#httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='selfsigned.key', certfile='selfsigned.crt', server_side=True)
+httpd.socket = ssl.wrap_socket(httpd.socket, keyfile='keys/selfsigned.key', certfile='keys/selfsigned.crt', server_side=True)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:
@@ -132,10 +130,11 @@ sudo tcpdump -i lo0 -s 0 tcp port 4443 -w localhost.pcap
 
 ---
 
-# Getting the "base color" for Diffie-Helman
+# Where do I get the master secret? (a.k.a. the "base color" for Diffie-Hellman)
 
 ```bash
 export SSLKEYLOGFILE=~/RC/lightning-talks/wireshark/keys/sslkeylog.log
+open -a "Google Chrome"
 ```
 
 ---
@@ -146,4 +145,10 @@ export SSLKEYLOGFILE=~/RC/lightning-talks/wireshark/keys/sslkeylog.log
 sudo tcpdump -i lo0 -s 0 tcp port 4443 -w localhost.pcap
 ```
 
-![inline](images/localhost-https-wireshark.png)
+![inline](images/localhost-decrypted-https-wireshark.png)
+
+---
+
+![inline](images/client-server-communication.gif)
+
+[.footer: http://sureshatt.blogspot.com/2010/10/simple-web-application.html]
