@@ -1,3 +1,14 @@
+tcpdump +
+
+![inline fill](images/wireshark-logo.png)
+
+useful for:
+
+- learning about networking
+- debugging
+
+---
+
 ![inline](images/client-server-communication.gif)
 
 [.footer: http://sureshatt.blogspot.com/2010/10/simple-web-application.html]
@@ -31,19 +42,6 @@ except KeyboardInterrupt:
 # In the browser
 
 ![inline](images/in-the-browser.png)
-
----
-
-# Beyond the browser
-
-tcpdump +
-
-![inline fill](images/wireshark-logo.png)
-
-useful for:
-
-- learning about networking
-- debugging
 
 ---
 
@@ -148,6 +146,8 @@ sudo tcpdump -i lo0 -s 0 tcp port 4443 -w localhost.pcap
 ![inline](images/localhost-decrypted-https-wireshark.png)
 
 ---
+
+# Where can I learn more?
 
 ![inline](images/client-server-communication.gif)
 
